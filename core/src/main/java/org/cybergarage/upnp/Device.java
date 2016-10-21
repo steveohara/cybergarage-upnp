@@ -96,54 +96,31 @@
 
 package org.cybergarage.upnp;
 
-import java.io.File;
-import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.URL;
-import java.util.Calendar;
-import java.util.HashMap;
-
-import org.cybergarage.http.HTTP;
-import org.cybergarage.http.HTTPRequest;
-import org.cybergarage.http.HTTPResponse;
-import org.cybergarage.http.HTTPServerList;
-import org.cybergarage.http.HTTPStatus;
+import org.cybergarage.http.*;
 import org.cybergarage.net.HostInterface;
 import org.cybergarage.soap.SOAPResponse;
-import org.cybergarage.upnp.control.ActionListener;
-import org.cybergarage.upnp.control.ActionRequest;
-import org.cybergarage.upnp.control.ActionResponse;
-import org.cybergarage.upnp.control.ControlRequest;
-import org.cybergarage.upnp.control.ControlResponse;
-import org.cybergarage.upnp.control.QueryListener;
-import org.cybergarage.upnp.control.QueryRequest;
-import org.cybergarage.upnp.device.Advertiser;
-import org.cybergarage.upnp.device.Description;
-import org.cybergarage.upnp.device.InvalidDescriptionException;
-import org.cybergarage.upnp.device.NTS;
-import org.cybergarage.upnp.device.ST;
-import org.cybergarage.upnp.device.SearchListener;
-import org.cybergarage.upnp.device.USN;
-import org.cybergarage.upnp.device.PresentationListener;
+import org.cybergarage.upnp.control.*;
+import org.cybergarage.upnp.device.*;
 import org.cybergarage.upnp.event.Subscriber;
 import org.cybergarage.upnp.event.Subscription;
 import org.cybergarage.upnp.event.SubscriptionRequest;
 import org.cybergarage.upnp.event.SubscriptionResponse;
-import org.cybergarage.upnp.ssdp.SSDPNotifyRequest;
-import org.cybergarage.upnp.ssdp.SSDPNotifySocket;
-import org.cybergarage.upnp.ssdp.SSDPPacket;
-import org.cybergarage.upnp.ssdp.SSDPSearchResponse;
-import org.cybergarage.upnp.ssdp.SSDPSearchResponseSocket;
-import org.cybergarage.upnp.ssdp.SSDPSearchSocketList;
+import org.cybergarage.upnp.ssdp.*;
 import org.cybergarage.upnp.xml.DeviceData;
 import org.cybergarage.util.Debug;
-import org.cybergarage.util.FileUtil;
 import org.cybergarage.util.Mutex;
 import org.cybergarage.util.TimerUtil;
 import org.cybergarage.xml.Node;
 import org.cybergarage.xml.Parser;
 import org.cybergarage.xml.ParserException;
 import org.cybergarage.xml.XML;
+
+import java.io.File;
+import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.URL;
+import java.util.Calendar;
+import java.util.HashMap;
 
 public class Device implements org.cybergarage.http.HTTPRequestListener,
 		SearchListener {
@@ -266,6 +243,7 @@ public class Device implements org.cybergarage.http.HTTPRequestListener,
 
 		if ((baseURLStr == null) || (baseURLStr.length() <= 0)) {
 			if ((locationURLStr != null) && (0 < locationURLStr.length())) {
+				locationURLStr = locationURLStr.replaceAll("(?i)/[a-z0-9]+\\.xml$","/");
 				if (!locationURLStr.endsWith("/") || !urlString.startsWith("/")) {
 					String absUrl = locationURLStr + urlString;
 					try {
